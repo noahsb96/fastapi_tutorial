@@ -1,8 +1,8 @@
-def get_full_name(first_name: str, last_name: str):
-    full_name = first_name.title() + " " + last_name.title()
-    return full_name
+# def get_full_name(first_name: str, last_name: str):
+#     full_name = first_name.title() + " " + last_name.title()
+#     return full_name
 
-print(get_full_name("john", "doe"))
+# print(get_full_name("john", "doe"))
 
 # The function does the following:
 
@@ -21,3 +21,8 @@ print(get_full_name("john", "doe"))
 # At the same point, you try to trigger the autocomplete with Ctrl+Space and you see:
 
 # With that, you can scroll, seeing the options, until you find the one that "rings a bell":
+
+def get_name_with_age(name: str, age: int):
+    """Function showing error checking"""
+    name_with_age = name + " is this old: " + age
+    return name_with_age
