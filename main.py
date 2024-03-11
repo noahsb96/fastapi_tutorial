@@ -24,5 +24,9 @@
 
 def get_name_with_age(name: str, age: int):
     """Function showing error checking"""
-    name_with_age = name + " is this old: " + age
+    name_with_age = name + " is this old: " + str(age)
     return name_with_age
+
+
+print(
+    get_name_with_age("Noah Bruce", 27))
