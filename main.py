@@ -22,11 +22,19 @@
 
 # With that, you can scroll, seeing the options, until you find the one that "rings a bell":
 
-def get_name_with_age(name: str, age: int):
-    """Function showing error checking"""
-    name_with_age = name + " is this old: " + str(age)
-    return name_with_age
+# def get_name_with_age(name: str, age: int):
+#     """Function showing error checking"""
+#     name_with_age = name + " is this old: " + str(age)
+#     return name_with_age
 
 
-print(
-    get_name_with_age("Noah Bruce", 27))
+# print(
+#     get_name_with_age("Noah Bruce", 27))
+
+def get_items(item_a: str, item_b: int, item_c: float, item_d: bool, item_e: bytes):
+    """Returning all item types"""
+    return item_a, item_b, item_c, item_d, item_d, item_e
+
+data = bytes([120, 110, 100, 97, 111])
+
+print(get_items("Noah", 27, 27.11, True, data))
