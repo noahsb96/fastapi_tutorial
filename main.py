@@ -54,3 +54,19 @@
 
 # Tuple: Tuples are immutable, meaning they cannot be changed once they are created. This makes them ideal for storing data that should not be modified, such as database records.
 # Sets: Set is a data type in python used to store several items in a single variable. It is a collection that is written with curly brackets and is both unindexed and unordered.
+
+# To define a dict, you pass 2 type parameters, separated by commas.
+# The first type parameter is for the keys of the dict.
+# The second type parameter is for the values of the dict:
+
+def process_items(prices: dict[str, float]):
+    for item_name, item_price in prices.items():
+        print(item_name)
+        print(item_price)
+
+# Dict: Python's efficient key/value hash table structure is called a "dict". The contents of a dict can be written as a series of key:value pairs within braces { }
+
+# This means:
+# The variable prices is a dict:
+# The keys of this dict are of type str (let's say, the name of each item).
+# The values of this dict are of type float (let's say, the price of each item).
