@@ -31,10 +31,20 @@
 # print(
 #     get_name_with_age("Noah Bruce", 27))
 
-def get_items(item_a: str, item_b: int, item_c: float, item_d: bool, item_e: bytes):
-    """Returning all item types"""
-    return item_a, item_b, item_c, item_d, item_d, item_e
+# def get_items(item_a: str, item_b: int, item_c: float, item_d: bool, item_e: bytes):
+#     """Returning all item types"""
+#     return item_a, item_b, item_c, item_d, item_d, item_e
 
-data = bytes([120, 110, 100, 97, 111])
+# data = bytes([120, 110, 100, 97, 111])
 
-print(get_items("Noah", 27, 27.11, True, data))
+# print(get_items("Noah", 27, 27.11, True, data))
+
+def process_items(items: list[str]):
+    for item in items:
+        print(item.title())
+
+# That means: "the variable items is a list, and each of the items in this list is a str".
+# By doing that, your editor can provide support even while processing items from the list:
+# Without types, that's almost impossible to achieve.
+# Notice that the variable item is one of the elements in the list items.
+# And still, the editor knows it is a str, and provides support for that.
