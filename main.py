@@ -106,19 +106,47 @@
 
 # You can also declare a class as the type of a variable.
 # Let's say you have a class Person, with a name:
-class Person:
-    def __init__(self, name: str):
-        self.name = name
-# Then you can declare a variable to be of type Person:
+# class Person:
+#     def __init__(self, name: str):
+#         self.name = name
+# # Then you can declare a variable to be of type Person:
 
-def get_person_name(one_person: Person):
-    print(one_person.name)
+# def get_person_name(one_person: Person):
+#     print(one_person.name)
 
-# And then, again, you get all the editor support
+# # And then, again, you get all the editor support
 
-# Notice that this means "one_person is an instance of the class Person".
-# It doesn't mean "one_person is the class called Person".
+# # Notice that this means "one_person is an instance of the class Person".
+# # It doesn't mean "one_person is the class called Person".
 
-Noah = Person("Noah")
+# Noah = Person("Noah")
 
-get_person_name(Noah)
+# get_person_name(Noah)
+
+# Pydantic is a Python library to perform data validation.
+# You declare the "shape" of the data as classes with attributes.
+# And each attribute has a type.
+# Then you create an instance of that class with some values and it will validate the values, convert them to the appropriate type (if that's the case) and give you an object with all the data.
+# And you get all the editor support with that resulting object.
+# An example from the official Pydantic docs:
+
+from datetime import datetime
+
+from pydantic import BaseModel
+
+
+class User(BaseModel):
+    id: int
+    name: str = "John Doe"
+    signup_ts: datetime | None = None
+    friends: list[int] = []
+
+
+external_data = {
+    "id": "123",
+    "signup_ts": "2017-06-01 12:22",
+    "friends": [1, "2", b"3"],
+}
+user = User(**external_data)
+print(user)
+print(user.id)
