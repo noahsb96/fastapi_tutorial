@@ -83,14 +83,23 @@
 # You can declare that a value could have a type, like str, but that it could also be None.
 # In Python 3.6 and above (including Python 3.10) you can declare it by importing and using Optional from the typing module.
 
-from typing import Optional
+# from typing import Optional
 
-def say_hi(name: Optional[str] = None):
+# def say_hi(name: Optional[str] = None):
+#     if name is not None:
+#         print(f"Hey {name}!")
+#     else:
+#         print("Hello World")
+
+# Using Optional[str] instead of just str will let the editor help you detecting errors where you could be assuming that a value is always a str, when it could actually be None too.
+# Optional[Something] is actually a shortcut for Union[Something, None], they are equivalent.
+# This also means that in Python 3.10, you can use Something | None:
+
+def say_hi(name: str | None = None):
     if name is not None:
         print(f"Hey {name}!")
     else:
         print("Hello World")
 
-# Using Optional[str] instead of just str will let the editor help you detecting errors where you could be assuming that a value is always a str, when it could actually be None too.
-# Optional[Something] is actually a shortcut for Union[Something, None], they are equivalent.
-# This also means that in Python 3.10, you can use Something | None:
+
+say_hi("Noah")
