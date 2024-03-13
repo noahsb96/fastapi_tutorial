@@ -39,12 +39,18 @@
 
 # print(get_items("Noah", 27, 27.11, True, data))
 
-def process_items(items: list[str]):
-    for item in items:
-        print(item.title())
+# def process_items(items: list[str]):
+#     for item in items:
+#         print(item.title())
 
 # That means: "the variable items is a list, and each of the items in this list is a str".
 # By doing that, your editor can provide support even while processing items from the list:
 # Without types, that's almost impossible to achieve.
 # Notice that the variable item is one of the elements in the list items.
 # And still, the editor knows it is a str, and provides support for that.
+
+# def process_items(items_t: tuple[int, int, str], items_s: set[bytes]):
+#     return items_t, items_s
+
+# Tuple: Tuples are immutable, meaning they cannot be changed once they are created. This makes them ideal for storing data that should not be modified, such as database records.
+# Sets: Set is a data type in python used to store several items in a single variable. It is a collection that is written with curly brackets and is both unindexed and unordered.
