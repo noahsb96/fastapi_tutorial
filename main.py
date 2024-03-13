@@ -95,11 +95,30 @@
 # Optional[Something] is actually a shortcut for Union[Something, None], they are equivalent.
 # This also means that in Python 3.10, you can use Something | None:
 
-def say_hi(name: str | None = None):
-    if name is not None:
-        print(f"Hey {name}!")
-    else:
-        print("Hello World")
+# def say_hi(name: str | None = None):
+#     if name is not None:
+#         print(f"Hey {name}!")
+#     else:
+#         print("Hello World")
 
 
-say_hi("Noah")
+# say_hi("Noah")
+
+# You can also declare a class as the type of a variable.
+# Let's say you have a class Person, with a name:
+class Person:
+    def __init__(self, name: str):
+        self.name = name
+# Then you can declare a variable to be of type Person:
+
+def get_person_name(one_person: Person):
+    print(one_person.name)
+
+# And then, again, you get all the editor support
+
+# Notice that this means "one_person is an instance of the class Person".
+# It doesn't mean "one_person is the class called Person".
+
+Noah = Person("Noah")
+
+get_person_name(Noah)
