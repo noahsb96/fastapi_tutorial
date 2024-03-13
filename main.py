@@ -59,10 +59,10 @@
 # The first type parameter is for the keys of the dict.
 # The second type parameter is for the values of the dict:
 
-def process_items(prices: dict[str, float]):
-    for item_name, item_price in prices.items():
-        print(item_name)
-        print(item_price)
+# def process_items(prices: dict[str, float]):
+#     for item_name, item_price in prices.items():
+#         print(item_name)
+#         print(item_price)
 
 # Dict: Python's efficient key/value hash table structure is called a "dict". The contents of a dict can be written as a series of key:value pairs within braces { }
 
@@ -70,3 +70,12 @@ def process_items(prices: dict[str, float]):
 # The variable prices is a dict:
 # The keys of this dict are of type str (let's say, the name of each item).
 # The values of this dict are of type float (let's say, the price of each item).
+
+# You can declare that a variable can be any of several types, for example, an int or a str.
+# In Python 3.6 and above (including Python 3.10) you can use the Union type from typing and put inside the square brackets the possible types to accept.
+# In Python 3.10 there's also a new syntax where you can put the possible types separated by a vertical bar (|).
+
+def process_item(item: int | str):
+    print(item)
+
+# In both cases this means that item could be an int or a str.
