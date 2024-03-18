@@ -40,9 +40,9 @@ async def read_users2():
 # The first path will always be used since the path matches first
 
 from enum import Enum
-
-class ModelName(str, Enum):
-    alexnet = "alexnet"
+class ModelName(str, Enum): # sub class that that inherits from str and from Enum
+    # When inheriting from str, the API docs will know that the values must be a string and will render correctly
+    alexnet = "alexnet" # Attributes will have fixed values, which will be the available valid values
     resnet = "resnet"
     lenet = "lenet"
 
@@ -50,6 +50,11 @@ class ModelName(str, Enum):
 async def get_model(model_name: ModelName):
     if model_name is ModelName.alexnet:
         return {"model_name": model_name, "message": "Deep Learning FTW!"}
+    
     if model_name.value == "lenet":
         return {"model_name": model_name, "message": "leCNN all the images"}
+    
     return {"model_name": model_name, "message": "Have some residuals"}
+
+# The available values for the path parameter are predefined so the docs can show them nicely
+# Going here shows this: http://127.0.0.1:8000/docs#/default/get_model_models__model_name__get
