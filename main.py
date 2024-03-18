@@ -38,3 +38,18 @@ async def read_users2():
     return ["Bean", "Elfo"]
 
 # The first path will always be used since the path matches first
+
+from enum import Enum
+
+class ModelName(str, Enum):
+    alexnet = "alexnet"
+    resnet = "resnet"
+    lenet = "lenet"
+
+@app.get("/models/{model_name}")
+async def get_model(model_name: ModelName):
+    if model_name is ModelName.alexnet:
+        return {"model_name": model_name, "message": "Deep Learning FTW!"}
+    if model_name.value == "lenet":
+        return {"model_name": model_name, "message": "leCNN all the images"}
+    return {"model_name": model_name, "message": "Have some residuals"}
