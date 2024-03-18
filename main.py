@@ -9,3 +9,6 @@ async def read_item(item_id: int): # this function as the argument item_id
 
 # if you run this example at http://127.0.0.1:8000/items/3
 # returns {"item_id": 3}
+# if I go to http://127.0.0.1:8000/items/foo or http://127.0.0.1:8000/items/4.2, I get HTTP error
+# Going to http://127.0.0.1:8000/docs gets automatic, interactive, API documentation
+# Going to http://127.0.0.1:8000/redoc gets alternative API documentaion using ReDoc 
