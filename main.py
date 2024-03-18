@@ -41,20 +41,33 @@ async def read_users2():
 
 from enum import Enum
 class ModelName(str, Enum): # sub class that that inherits from str and from Enum
-    # When inheriting from str, the API docs will know that the values must be a string and will render correctly
+                            # When inheriting from str, the API docs will know that the values must be a string and will render correctly
     alexnet = "alexnet" # Attributes will have fixed values, which will be the available valid values
     resnet = "resnet"
     lenet = "lenet"
 
+# The value of the path parameter will be an enumeration member
 @app.get("/models/{model_name}")
 async def get_model(model_name: ModelName):
-    if model_name is ModelName.alexnet:
+    if model_name is ModelName.alexnet: # This compares the model_name in the path parameter to the enumeration member in the ModelName
         return {"model_name": model_name, "message": "Deep Learning FTW!"}
     
-    if model_name.value == "lenet":
+    if model_name.value == "lenet": # You can also get the model_name in the path parameter and check the value in the enumeration member
         return {"model_name": model_name, "message": "leCNN all the images"}
     
-    return {"model_name": model_name, "message": "Have some residuals"}
+    return {"model_name": model_name, "message": "Have some residuals"} # All the return statements return the enum mebers from your path operation, even nested in a JSON body
+                                                                        # They will then be converted to their values, like strings in this case, before returning to the client
 
 # The available values for the path parameter are predefined so the docs can show them nicely
 # Going here shows this: http://127.0.0.1:8000/docs#/default/get_model_models__model_name__get
+
+# If you have a path operation with a path of /files/{file_path} but the file_path contains a path of home/johndoe/myfile.txt so the full path would be /files/home/johndoe/myfile.txt
+# OpenAPI does not support a way to declare a path parameter inside because they're difficult to test and define
+# You can accomplish this in FastAPI using an internal tool from Starlette
+# The docs would still work if you did this but would not have any documentation saying that parameter should contain a path
+
+# Using an option directly from Starlette, you can declare a path parameter containing a path using /files/{file_path:path}
+# The name of this parameter would be file_path and the :path part would tell it that the parameter should match any path
+@app.get("/files/{file_path:path}")
+async def read_file(file_path: str):
+    return {"file_path": file_path}
