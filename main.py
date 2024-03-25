@@ -117,17 +117,30 @@ fake_items_db = [{"item_name": "Foo"}, {"item_name": "Bar"}, {"item_name": "Baz"
 
 # You can declare multiple path parameters and query parameters at the same time. FastAPI will know inherently which is which. You also don't have to declare them in a specific order. They're detected by name.
 
-@app.get("/users/{user_id}/items/{item_id}")
-async def read_user_item(
-    user_id: int, item_id: str, q: str | None = None, short: bool = False
-):
-    item = {"item_id": item_id, "owner_id": user_id}
-    if q:
-        item.update({"q": q})
-    if not short:
-        item.update(
-            {"description": "This is an amazing item that has a long description"}
-        )
-    return item
+# @app.get("/users/{user_id}/items/{item_id}")
+# async def read_user_item(
+#     user_id: int, item_id: str, q: str | None = None, short: bool = False
+# ):
+#     item = {"item_id": item_id, "owner_id": user_id}
+#     if q:
+#         item.update({"q": q})
+#     if not short:
+#         item.update(
+#             {"description": "This is an amazing item that has a long description"}
+#         )
+#     return item
 
 # This link will show this in action http://127.0.0.1:8000/users/1/items/foo?short=True
+
+# When you declare a default value for non-path parameters then it isn't required
+# If you don't want to add a specific value but just make it optional, you set the default as None
+# But when you want to make a query parameter required, you can just not declare any default value
+
+# @app.get("/items/{item_id}")
+# async def read_user_item(item_id: str, needy: str):
+#     item = {"item_id": item_id, "needy": needy}
+#     return item
+
+# The query parameter needy, which is a string, is required
+# if you go to http://127.0.0.1:8000/items/foo-item you will get an error
+# Since needy is required, you would just need to set that parameter in the URL like this: http://127.0.0.1:8000/items/foo-item?needy=sooooneedy
