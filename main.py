@@ -100,9 +100,28 @@ fake_items_db = [{"item_name": "Foo"}, {"item_name": "Bar"}, {"item_name": "Baz"
 #         return {"item_id": item_id, "q": q}
 #     return {"item_id": item_id}
 
-@app.get("/items/{item_id}")
-async def read_item(item_id: str, q: str | None = None, short: bool = False):
-    item = {"item_id": item_id}
+# @app.get("/items/{item_id}")
+# async def read_item(item_id: str, q: str | None = None, short: bool = False):
+#     item = {"item_id": item_id}
+#     if q:
+#         item.update({"q": q})
+#     if not short:
+#         item.update(
+#             {"description": "This is an amazing item that has a long description"}
+#         )
+#     return item
+
+# If you go to http://127.0.0.1:8000/items/foo?short=1, http://127.0.0.1:8000/items/foo?short=True, http://127.0.0.1:8000/items/foo?short=true, http://127.0.0.1:8000/items/foo?short=on, http://127.0.0.1:8000/items/foo?short=yes or any other case variation, your function will see the parameter short as True. Otherwise as False
+
+# This example is giving a short description, i.e. the item id in the query parameter, if the string short is in the path. Otherwise, the item will have the long description.
+
+# You can declare multiple path parameters and query parameters at the same time. FastAPI will know inherently which is which. You also don't have to declare them in a specific order. They're detected by name.
+
+@app.get("/users/{user_id}/items/{item_id}")
+async def read_user_item(
+    user_id: int, item_id: str, q: str | None = None, short: bool = False
+):
+    item = {"item_id": item_id, "owner_id": user_id}
     if q:
         item.update({"q": q})
     if not short:
@@ -111,7 +130,4 @@ async def read_item(item_id: str, q: str | None = None, short: bool = False):
         )
     return item
 
-# If you go to http://127.0.0.1:8000/items/foo?short=1, http://127.0.0.1:8000/items/foo?short=True, http://127.0.0.1:8000/items/foo?short=true, http://127.0.0.1:8000/items/foo?short=on, http://127.0.0.1:8000/items/foo?short=yes or any other case variation, your function will see the parameter short as True. Otherwise as False
-
-# This example is giving a short description, i.e. the item id in the query parameter, if the string short is in the path. Otherwise, the item will have the long description.
-
+# This link will show this in action http://127.0.0.1:8000/users/1/items/foo?short=True
