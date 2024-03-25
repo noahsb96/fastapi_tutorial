@@ -144,3 +144,15 @@ fake_items_db = [{"item_name": "Foo"}, {"item_name": "Bar"}, {"item_name": "Baz"
 # The query parameter needy, which is a string, is required
 # if you go to http://127.0.0.1:8000/items/foo-item you will get an error
 # Since needy is required, you would just need to set that parameter in the URL like this: http://127.0.0.1:8000/items/foo-item?needy=sooooneedy
+
+# You can also define a required, default and optional query parameter at the same time
+
+@app.get("/items/{item_id}")
+async def read_user_item(
+    item_id: str, needy: str, skip: int = 0, limit: int | None = None
+):
+    item = {"item_id": item_id, "needy": needy, "skip": skip, "limit": limit}
+    return item
+
+# needy is required, skip is an int with a default value of 0 and limit is optional and is an int
+# This demonstrates all of this: http://127.0.0.1:8000/items/foo-item?needy=sooooneedy&limit=10&skip=20
