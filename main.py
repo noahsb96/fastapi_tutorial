@@ -2,10 +2,10 @@ from fastapi import FastAPI
 
 app = FastAPI()
 
-@app.get("/items/{item_id}") # value of path parameter item_id will be passed to 
-async def read_item(item_id: int): # this function as the argument item_id
-    return {"item_id": item_id} # run this function, start uvicorn and go to http://127.0.0.1:8000/items/foo to see response
-# returns {"item_id": "foo"}
+# @app.get("/items/{item_id}") # value of path parameter item_id will be passed to 
+# async def read_item(item_id: int): # this function as the argument item_id
+#     return {"item_id": item_id} # run this function, start uvicorn and go to http://127.0.0.1:8000/items/foo to see response
+# # returns {"item_id": "foo"}
 
 # if you run this example at http://127.0.0.1:8000/items/3
 # returns {"item_id": 3}
@@ -70,4 +70,32 @@ async def get_model(model_name: ModelName):
 # The name of this parameter would be file_path and the :path part would tell it that the parameter should match any path
 @app.get("/files/{file_path:path}")
 async def read_file(file_path: str):
-    return {"file_path": file_path}
+    return {"file_path": file_path}\
+    
+# When you declare other function parameters that are not part of the path parameters, they are automatically interpreted as "query" parameters.
+
+fake_items_db = [{"item_name": "Foo"}, {"item_name": "Bar"}, {"item_name": "Baz"}]
+
+# @app.get("/items/")
+# async def read_item(skip: int = 0, limit: int = 10):
+#     return fake_items_db[skip : skip + limit]
+
+# The query is the set of key-value pairs that go after the ? in a URL, separated by & characters.
+# For example, in the URL: http://127.0.0.1:8000/items/?skip=0&limit=10
+# skip: with a value of 0
+# limit: with a value of 10
+# As they are part of the URL, they are "naturally" strings.
+# But when you declare them with Python types (in the example above, as int), they are converted to that type and validated against it.
+
+# Query Parameters aren't fixed parts of a path so they are optional and you can set default values on them.
+# The first example have default values of skip = 0 and limit = 10
+# Going to http://127.0.0.1:8000/items/ is the same as going to http://127.0.0.1:8000/items/?skip=0&limit=10
+# But going to http://127.0.0.1:8000/items/?skip=20 would make skip = 20 and limit = 10
+
+# You can declare optional query parameters by setting the default value to None
+
+# @app.get("/items/{item_id}")
+# async def read_item(item_id: str, q: str | None = None):
+#     if q:
+#         return {"item_id": item_id, "q": q}
+#     return {"item_id": item_id}
