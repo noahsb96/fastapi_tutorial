@@ -147,12 +147,50 @@ fake_items_db = [{"item_name": "Foo"}, {"item_name": "Bar"}, {"item_name": "Baz"
 
 # You can also define a required, default and optional query parameter at the same time
 
-@app.get("/items/{item_id}")
-async def read_user_item(
-    item_id: str, needy: str, skip: int = 0, limit: int | None = None
-):
-    item = {"item_id": item_id, "needy": needy, "skip": skip, "limit": limit}
-    return item
+# @app.get("/items/{item_id}")
+# async def read_user_item(
+#     item_id: str, needy: str, skip: int = 0, limit: int | None = None
+# ):
+#     item = {"item_id": item_id, "needy": needy, "skip": skip, "limit": limit}
+#     return item
 
 # needy is required, skip is an int with a default value of 0 and limit is optional and is an int
 # This demonstrates all of this: http://127.0.0.1:8000/items/foo-item?needy=sooooneedy&limit=10&skip=20
+
+# First import BaseModel from pydantic
+from pydantic import BaseModel
+
+class Item(BaseModel):
+    name: str
+    description: str | None = None
+    price: float
+    tax: float | None = None
+
+# @app.post("/items/")
+# async def create_item(item: Item):
+#     return item
+
+# When a model has a default value, it isn't required, otherwise it is required. Making an attribute have the value of None will make it optional
+# When you want to add it to your path operation, declare it the same way with path and query parameters
+# Declare its type as the model you created, Item
+# With the python type declaration, FastAPI will,
+    # Read the body of the request as JSON.
+    # Convert the corresponding types (if needed).
+    # Validate the data.
+        # If the data is invalid, it will return a nice and clear error, indicating exactly where and what was the incorrect data.
+    # Give you the received data in the parameter item.
+        # As you declared it in the function to be of type Item, you will also have all the editor support (completion, etc) for all of the attributes and their types.
+    # Generate JSON Schema definitions for your model, you can also use them anywhere else you like if it makes sense for your project.
+    # Those schemas will be part of the generated OpenAPI schema, and used by the automatic documentation UIs.
+# The JSON Schemas of your models will be in the OpenAPI generated schema and will be shown in the interactive API docs
+# In VSCode, you will also get type hints and completion in the function. This wouldn't happen if a dict was received instead of a Pydantic model
+# You will also get error checks
+# The whole FastAPI framework was built around this design and was tested to make sure it worked with all editors
+
+@app.post("/items/")
+async def create_item(item: Item):
+    item_dict = item.model_dump() # docs say to use dict but VSCode says to use model_dump. Have to research what this is
+    if item.tax:
+        price_with_tax = item.price + item.tax
+        item_dict.update({"price_with_tax": price_with_tax})
+    return item_dict
