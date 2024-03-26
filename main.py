@@ -200,6 +200,21 @@ async def create_item(item: Item):
 # You can declare path parameters and request body at the same time
 # FastAPI recognizes that function parameters that match path parameters should be taken from the path and function parameters that are declared to be Pydantic models should be taken from the request body
 
+# @app.put("/items/{item_id}")
+# async def update_item(item_id: int, item: Item):
+#     return {"item_id": item_id, **item.model_dump()}
+
+# You can also declare body, path and query parameters, all at the same time
+# FastAPI will recognize each of them and take the data from the correct place
+
 @app.put("/items/{item_id}")
-async def update_item(item_id: int, item: Item):
-    return {"item_id": item_id, **item.dict()}
+async def update_item(item_id: int, item: Item, q: str | None = None):
+    result = {"item_id": item_id, **item.model_dump()}
+    if q:
+        result.update({"q": q})
+    return result
+
+# The function parameters will be as follows:
+# If the parameter is also declared in the path, it will be used as a path parameter.
+# If the parameter is of a singular type (like int, float, str, bool, etc) it will be interpreted as a query parameter.
+# If the parameter is declared to be of the type of a Pydantic model, it will be interpreted as a request body.
