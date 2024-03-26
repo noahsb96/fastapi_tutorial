@@ -194,3 +194,12 @@ async def create_item(item: Item):
         price_with_tax = item.price + item.tax
         item_dict.update({"price_with_tax": price_with_tax})
     return item_dict
+
+# Taken from stack overflow: Note that Pydantic models can also be converted to dictionaries using dict(model). With this approach the raw field values are returned, so sub-models will not be converted to dictionaries. Either .model_dump() or dict(model) will provide a dict of fields, but .model_dump() can take numerous other arguments—such as mode, for instance, which is useful when dealing with non-JSON serializable objects (see the relevant documentation)—as well as will recursively convert nested models into dicts.
+
+# You can declare path parameters and request body at the same time
+# FastAPI recognizes that function parameters that match path parameters should be taken from the path and function parameters that are declared to be Pydantic models should be taken from the request body
+
+@app.put("/items/{item_id}")
+async def update_item(item_id: int, item: Item):
+    return {"item_id": item_id, **item.dict()}
