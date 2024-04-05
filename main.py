@@ -244,3 +244,9 @@ async def read_items(q: Annotated[str | None, Query(max_length=50)] = None):
     if q:
         results.update({"q": q})
     return results
+
+# We used Annotated  to add metadata to parameters in Python Types Intro, here's how we use it with FastAPI
+
+# The default value is still None, so the parameter is still optional
+# Having Query(max_length=50) inside of annotated, we are telling FastAPI that we want this value extracted from the query parameters. This would have been the default anyway but we also want additonal validation for this value. This is the reason we do this, for the additional validation.
+# FastAPI will validate the data making sure the max length is 50 characters. It will also show a clear error for the client when the data isn't valid. Also FastAPI will document the parameter in the OpenAPI schema path operation so it will show up in the automatic docs UI
