@@ -147,12 +147,12 @@ fake_items_db = [{"item_name": "Foo"}, {"item_name": "Bar"}, {"item_name": "Baz"
 
 # You can also define a required, default and optional query parameter at the same time
 
-# @app.get("/items/{item_id}")
-# async def read_user_item(
-#     item_id: str, needy: str, skip: int = 0, limit: int | None = None
-# ):
-#     item = {"item_id": item_id, "needy": needy, "skip": skip, "limit": limit}
-#     return item
+@app.get("/items/{item_id}")
+async def read_user_item(
+    item_id: str, needy: str, skip: int = 0, limit: int | None = None
+):
+    item = {"item_id": item_id, "needy": needy, "skip": skip, "limit": limit}
+    return item
 
 # needy is required, skip is an int with a default value of 0 and limit is optional and is an int
 # This demonstrates all of this: http://127.0.0.1:8000/items/foo-item?needy=sooooneedy&limit=10&skip=20
@@ -218,3 +218,16 @@ async def update_item(item_id: int, item: Item, q: str | None = None):
 # If the parameter is also declared in the path, it will be used as a path parameter.
 # If the parameter is of a singular type (like int, float, str, bool, etc) it will be interpreted as a query parameter.
 # If the parameter is declared to be of the type of a Pydantic model, it will be interpreted as a request body.
+
+# FastAPI allows you to declare additonal information and validation for your parameters
+
+@app.get("/items/")
+async def read_items(q: str | None = None):
+    results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
+    if q:
+        results.upfate({"q": q})
+    return results
+
+# The query parameter q is of type Union[str, None] (or str | None in Python 3.10), that means that it's of type str but could also be None, and indeed, the default value is None, so FastAPI will know it's not required.
+
+# We are going to enforce that even though q is optional, whenever it is provided, its length doesn't exceed 50 characters
