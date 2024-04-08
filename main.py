@@ -238,12 +238,12 @@ from typing import Annotated
 
 # In Python 3.9 or above, Annotated is part of the standard library, so you can import it from typing
 
-@app.get("/items/")
-async def read_items(q: Annotated[str | None, Query(max_length=50)] = None):
-    results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
-    if q:
-        results.update({"q": q})
-    return results
+# @app.get("/items/")
+# async def read_items(q: Annotated[str | None, Query(max_length=50)] = None):
+#     results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
+#     if q:
+#         results.update({"q": q})
+#     return results
 
 # We used Annotated  to add metadata to parameters in Python Types Intro, here's how we use it with FastAPI
 
@@ -272,3 +272,37 @@ async def read_items(q: Annotated[str | None, Query(max_length=50)] = None):
 # q: Annotated[str, Query(default="rick")] = "morty" wouldn't be allowed because it isn't clear if the default value should be "rick" or "morty"
 # instead, you would use q: Annotated[str, Query()] = "rick"
 # in older code, you would see q: str = Query(default="rick")
+
+# Using Annotated is recommended instead of the default value in function parameters
+# The default value of the function parameter is the actual default value
+# You could call that same function in other places without FastAPI and it would work as expected. If there's a required parameter without a default value, VSCode would let you know with an error. Python would also let you know this.
+# When Annotated isn't used and the old default value style is, when you call that function without FastAPI elsewhere, you'd have to remember to pass the arguments to the function for it to work. Otherwise the values would be different than expected and VSCode and Python wouldn't say anything. You'd only know when the operations error out.
+
+# We can also add a min_length parameter
+
+# @app.get("/items/")
+# async def read_items(
+#     q: Annotated[str | None, Query(min_length=3, max_length=50)] = None,
+# ):
+#     results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
+#     if q:
+#         results.update({"q": q})
+#     return results
+
+# We can define a regular expression pattern that the parameter should match
+
+@app.get("/items/")
+async def read_items(
+    q: Annotated[
+        str | None, Query(min_length=3, max_length=50, pattern="^fixedquery$")
+    ] = None,
+):
+    results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
+    if q:
+        results.update({"q": q})
+    return results
+
+# ^ starts with the following characters and doesn't have characters before
+# fixedquery has the exact value of fixedquery
+# $ ends there and doesn't have anymore characters after fixedquery
+# You can use regex directly in FastAPI
