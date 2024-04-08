@@ -5,7 +5,7 @@ app = FastAPI()
 # @app.get("/items/{item_id}") # value of path parameter item_id will be passed to 
 # async def read_item(item_id: int): # this function as the argument item_id
 #     return {"item_id": item_id} # run this function, start uvicorn and go to http://127.0.0.1:8000/items/foo to see response
-# # returns {"item_id": "foo"}
+# returns {"item_id": "foo"}
 
 # if you run this example at http://127.0.0.1:8000/items/3
 # returns {"item_id": 3}
@@ -28,9 +28,9 @@ async def read_user(user_id: str):
 
 # You also cannot redefine a path operation
 
-@app.get("/users")
-async def read_users():
-    return ["Rick", "Morty"]
+# @app.get("/users")
+# async def read_users():
+#     return ["Rick", "Morty"]
 
 
 @app.get("/users")
@@ -117,18 +117,18 @@ fake_items_db = [{"item_name": "Foo"}, {"item_name": "Bar"}, {"item_name": "Baz"
 
 # You can declare multiple path parameters and query parameters at the same time. FastAPI will know inherently which is which. You also don't have to declare them in a specific order. They're detected by name.
 
-# @app.get("/users/{user_id}/items/{item_id}")
-# async def read_user_item(
-#     user_id: int, item_id: str, q: str | None = None, short: bool = False
-# ):
-#     item = {"item_id": item_id, "owner_id": user_id}
-#     if q:
-#         item.update({"q": q})
-#     if not short:
-#         item.update(
-#             {"description": "This is an amazing item that has a long description"}
-#         )
-#     return item
+@app.get("/users/{user_id}/items/{item_id}")
+async def read_user_item(
+    user_id: int, item_id: str, q: str | None = None, short: bool = False
+):
+    item = {"item_id": item_id, "owner_id": user_id}
+    if q:
+        item.update({"q": q})
+    if not short:
+        item.update(
+            {"description": "This is an amazing item that has a long description"}
+        )
+    return item
 
 # This link will show this in action http://127.0.0.1:8000/users/1/items/foo?short=True
 
@@ -221,12 +221,12 @@ async def update_item(item_id: int, item: Item, q: str | None = None):
 
 # FastAPI allows you to declare additonal information and validation for your parameters
 
-@app.get("/items/")
-async def read_items(q: str | None = None):
-    results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
-    if q:
-        results.upfate({"q": q})
-    return results
+# @app.get("/items/")
+# async def read_items(q: str | None = None):
+#     results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
+#     if q:
+#         results.upfate({"q": q})
+#     return results
 
 # The query parameter q is of type Union[str, None] (or str | None in Python 3.10), that means that it's of type str but could also be None, and indeed, the default value is None, so FastAPI will know it's not required.
 
@@ -250,3 +250,25 @@ async def read_items(q: Annotated[str | None, Query(max_length=50)] = None):
 # The default value is still None, so the parameter is still optional
 # Having Query(max_length=50) inside of annotated, we are telling FastAPI that we want this value extracted from the query parameters. This would have been the default anyway but we also want additonal validation for this value. This is the reason we do this, for the additional validation.
 # FastAPI will validate the data making sure the max length is 50 characters. It will also show a clear error for the client when the data isn't valid. Also FastAPI will document the parameter in the OpenAPI schema path operation so it will show up in the automatic docs UI
+
+# Previous versions of FastAPI required you to use Query as the default value of your parameter instead of putting it in Annotated. There's a high chance of seeing code around it so this is the explanation:
+# This is how to use Query() as the defualt value of the function parameter to set the max_length to 50
+
+# @app.get("/items/")
+# async def read_items(q: str | None = Query(default=None, max_length=50)):
+#     results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
+#     if q:
+#         results.update({"q": q})
+#     return results
+
+# In this case without using Annotated, we replace the default value None in the function with Query(). Then set the default Value with the parameter Query(default=None). This serves the same purpose of defining the default value
+# q: Union[str, None] = Query(default=None) makes the parameter optional with a default value of None, same thing as q: Union[str, None] = None
+# In Python 3.10 and up, q: str | None = Query(default=None) is the same as q: str | None = None but it's explicitly a query parameter
+# You then pass more parameters to Query, like max_length that applies to strings
+# This validates the data and shows a clear error when the data isn't valid, then documents the parameter in the OpenAPI schema path operation
+
+# When using Query inside Annotated, you cannot use the default parameter for Query
+# You would use the actual default value of the function parameter. Otherwise it wouldn't be consistent
+# q: Annotated[str, Query(default="rick")] = "morty" wouldn't be allowed because it isn't clear if the default value should be "rick" or "morty"
+# instead, you would use q: Annotated[str, Query()] = "rick"
+# in older code, you would see q: str = Query(default="rick")
