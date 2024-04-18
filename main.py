@@ -367,9 +367,15 @@ from typing import Annotated
 # and the API docs would update accordingly to allow multiple values
 
 # You can also define a default list of values if it isn't provided
-@app.get("/items/")
-async def read_items(q: Annotated[list[str], Query()] = ["foo", "bar"]):
-    query_items = {"q": q}
-    return query_items
+# @app.get("/items/")
+# async def read_items(q: Annotated[list[str], Query()] = ["foo", "bar"]):
+#     query_items = {"q": q}
+#     return query_items
 # Then if you went to http://localhost:8000/items/
 # The default of q will be ["foo", "bar"] and the response would be the same as above
+
+# You can also just write list instead of just using List[str] or list[str] in Python 3.9+
+@app.get("/items/")
+async def read_items(q: Annotated[list, Query()] = []):
+    query_items = {"q": q}
+    return query_items
