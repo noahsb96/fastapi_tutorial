@@ -311,10 +311,20 @@ from typing import Annotated
 # You can use default values other than None
 # if we wanted to declare the q query parameter to have a min_length of 3 and to have a default value of fixedquery
 
+# @app.get("/items/")
+# async def read_items(q: Annotated[str, Query(min_length=3)] = "fixedquery"):
+#     results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
+#     if q:
+#         results.update({"q": q})
+#     return results
+
+# When we don't need to declare more validations or metadata, we can make the q query parameter required not just by setting a default value to q like q:str instead of q: Union[str, None] = None
+# We can now declare it with Query like q: Annotated[Union[str, None], Query(min_length=3)] = None
+# So if we need to declare a value as required while using Query, you just don't declare a default value
+
 @app.get("/items/")
-async def read_items(q: Annotated[str, Query(min_length=3)] = "fixedquery"):
+async def read_items(q: Annotated[str, Query(min_length=3)]):
     results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
     if q:
         results.update({"q": q})
     return results
-
