@@ -401,9 +401,32 @@ from typing import Annotated
 # Imagine that you want the parameter to be item-query like in http://127.0.0.1:8000/items/?item-query=foobaritems
 # But item-query isn't a valid Python variable name, the closest would be item_query but we need it to be exactly item-query
 # Then you can declare an alias and that alias will be used to find the parameter value
+# @app.get("/items/")
+# async def read_items(q: Annotated[str | None, Query(alias="item-query")] = None):
+#     results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
+#     if q:
+#         results.update({"q": q})
+#     return results
+
+# Now if we don't want this parameter anymore we have to leave it there a while because there are clients that are still using it but we need the docs to show it as deprecated
+# We can pass the prameter deprecated=True to Query
 @app.get("/items/")
-async def read_items(q: Annotated[str | None, Query(alias="item-query")] = None):
+async def read_items(
+    q: Annotated[
+        str | None,
+        Query(
+            alias="item-query",
+            title="Query string",
+            description="Query string for the items to search in the database that have a good match",
+            min_length=3,
+            max_length=50,
+            pattern="^fixedquery$",
+            deprecated=True,
+        ),
+    ] = None,
+):
     results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
     if q:
         results.update({"q": q})
     return results
+# And the docs will show that this parameter is deprecated
