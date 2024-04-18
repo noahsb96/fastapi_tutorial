@@ -330,11 +330,20 @@ from typing import Annotated
 #     return results
 
 # There's another way to explicitly declare a required value. You set the default to the literal value ...
+# @app.get("/items/")
+# async def read_items(q: Annotated[str, Query(min_length=3)] = ...):
+#     results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
+#     if q:
+#         results.update({"q": q})
+#     return results
+
+# The elipses lets FastAPI know that the parameter is required
+
+# You can declare that a parameter accepts None but that it's still required. This forces the clients to send a value even if the value is None
+# You would just declare None is a valid type but use the elipses as the default
 @app.get("/items/")
-async def read_items(q: Annotated[str, Query(min_length=3)] = ...):
+async def read_items(q: Annotated[str | None, Query(min_length=3)] = ...):
     results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
     if q:
         results.update({"q": q})
     return results
-
-# The elipses lets FastAPI know that the parameter is required
