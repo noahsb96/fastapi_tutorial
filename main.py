@@ -322,9 +322,19 @@ from typing import Annotated
 # We can now declare it with Query like q: Annotated[Union[str, None], Query(min_length=3)] = None
 # So if we need to declare a value as required while using Query, you just don't declare a default value
 
+# @app.get("/items/")
+# async def read_items(q: Annotated[str, Query(min_length=3)]):
+#     results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
+#     if q:
+#         results.update({"q": q})
+#     return results
+
+# There's another way to explicitly declare a required value. You set the default to the literal value ...
 @app.get("/items/")
-async def read_items(q: Annotated[str, Query(min_length=3)]):
+async def read_items(q: Annotated[str, Query(min_length=3)] = ...):
     results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
     if q:
         results.update({"q": q})
     return results
+
+# The elipses lets FastAPI know that the parameter is required
