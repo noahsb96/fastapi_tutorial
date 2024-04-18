@@ -341,9 +341,27 @@ from typing import Annotated
 
 # You can declare that a parameter accepts None but that it's still required. This forces the clients to send a value even if the value is None
 # You would just declare None is a valid type but use the elipses as the default
+# @app.get("/items/")
+# async def read_items(q: Annotated[str | None, Query(min_length=3)] = ...):
+#     results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
+#     if q:
+#         results.update({"q": q})
+#     return results
+
+# When a query parameter is explicity defined with Query you can also declare it to receive a list or multiple values
+# To declare a query parameter q that can appear multiple times in the URL, you can write:
 @app.get("/items/")
-async def read_items(q: Annotated[str | None, Query(min_length=3)] = ...):
-    results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
-    if q:
-        results.update({"q": q})
-    return results
+async def read_items(q: Annotated[list[str] | None, Query()] = None):
+    query_items = {"q": q}
+    return query_items
+
+# Then when you go to http://localhost:8000/items/?q=foo&q=bar
+# You would get multiple q query parameter values (foo and bar) in a list inside your path operation function, in the function parameter q
+# The response to the URL would be:
+# {
+#   "q": [
+#     "foo",
+#     "bar"
+#   ]
+# }
+# and the API docs would update accordingly to allow multiple values
