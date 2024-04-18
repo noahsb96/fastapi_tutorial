@@ -350,10 +350,10 @@ from typing import Annotated
 
 # When a query parameter is explicity defined with Query you can also declare it to receive a list or multiple values
 # To declare a query parameter q that can appear multiple times in the URL, you can write:
-@app.get("/items/")
-async def read_items(q: Annotated[list[str] | None, Query()] = None):
-    query_items = {"q": q}
-    return query_items
+# @app.get("/items/")
+# async def read_items(q: Annotated[list[str] | None, Query()] = None):
+#     query_items = {"q": q}
+#     return query_items
 
 # Then when you go to http://localhost:8000/items/?q=foo&q=bar
 # You would get multiple q query parameter values (foo and bar) in a list inside your path operation function, in the function parameter q
@@ -365,3 +365,11 @@ async def read_items(q: Annotated[list[str] | None, Query()] = None):
 #   ]
 # }
 # and the API docs would update accordingly to allow multiple values
+
+# You can also define a default list of values if it isn't provided
+@app.get("/items/")
+async def read_items(q: Annotated[list[str], Query()] = ["foo", "bar"]):
+    query_items = {"q": q}
+    return query_items
+# Then if you went to http://localhost:8000/items/
+# The default of q will be ["foo", "bar"] and the response would be the same as above
