@@ -291,18 +291,30 @@ from typing import Annotated
 
 # We can define a regular expression pattern that the parameter should match
 
-@app.get("/items/")
-async def read_items(
-    q: Annotated[
-        str | None, Query(min_length=3, max_length=50, pattern="^fixedquery$")
-    ] = None,
-):
-    results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
-    if q:
-        results.update({"q": q})
-    return results
+# @app.get("/items/")
+# async def read_items(
+#     q: Annotated[
+#         str | None, Query(min_length=3, max_length=50, pattern="^fixedquery$")
+#     ] = None,
+# ):
+#     results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
+#     if q:
+#         results.update({"q": q})
+#     return results
 
 # ^ starts with the following characters and doesn't have characters before
 # fixedquery has the exact value of fixedquery
 # $ ends there and doesn't have anymore characters after fixedquery
 # You can use regex directly in FastAPI
+# Using the parameter regex="^fixedquery$" is deprecated
+
+# You can use default values other than None
+# if we wanted to declare the q query parameter to have a min_length of 3 and to have a default value of fixedquery
+
+@app.get("/items/")
+async def read_items(q: Annotated[str, Query(min_length=3)] = "fixedquery"):
+    results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
+    if q:
+        results.update({"q": q})
+    return results
+
