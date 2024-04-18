@@ -382,17 +382,27 @@ from typing import Annotated
 
 # We can add more info to the parameter
 # We can add a title and a description
+# @app.get("/items/")
+# async def read_items(
+#     q: Annotated[
+#         str | None,
+#         Query(
+#             title="Query string",
+#             description="Query string for the items to search in the database that have a good match",
+#             min_length=3,
+#         ),
+#     ] = None,
+# ):
+#     results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
+#     if q:
+#         results.update({"q": q})
+#     return results
+
+# Imagine that you want the parameter to be item-query like in http://127.0.0.1:8000/items/?item-query=foobaritems
+# But item-query isn't a valid Python variable name, the closest would be item_query but we need it to be exactly item-query
+# Then you can declare an alias and that alias will be used to find the parameter value
 @app.get("/items/")
-async def read_items(
-    q: Annotated[
-        str | None,
-        Query(
-            title="Query string",
-            description="Query string for the items to search in the database that have a good match",
-            min_length=3,
-        ),
-    ] = None,
-):
+async def read_items(q: Annotated[str | None, Query(alias="item-query")] = None):
     results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
     if q:
         results.update({"q": q})
